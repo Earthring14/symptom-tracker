@@ -1,10 +1,8 @@
-import sys
 import os
 import datetime
 from faster_whisper import WhisperModel
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-import csv
 
 template = """
 
@@ -12,10 +10,9 @@ You are the assistant of an accupuncturist.
 Here is a transcript from their latest session: {transcript}
 
 Your job is to split it into 3 fields, and structure your answer like this:
-    Sypmtoms:
+    Symptoms:
         - Symptom 1
         - Symptom 2
-        etc.
         
     Treatment Plan:
         - Treatment Plan
@@ -23,7 +20,6 @@ Your job is to split it into 3 fields, and structure your answer like this:
     Needling points:
         - Point 1
         - Point 2
-        etc.
 
 DO NOT ADD OR MAKE UP FAKE OR EXTRA INFORMATION.
 Just split the information, no extra comment.
@@ -38,33 +34,35 @@ llama_model = OllamaLLM(model="llama3.2")
 prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | llama_model
 
-def transcribe(audiofile):
-    segments, info = whisper_model.transcribe(audiofile)
+
+def transcribe_audio(path: str) -> str:
+    segments, info = whisper_model.transcribe(path)
     transcript = "".join([seg.text for seg in segments])
     return transcript
 
-def extract_fields(transcript):
+
+def extract_fields(transcript: str) -> str:
     result = chain.invoke({"transcript": transcript})
-    return(result)
+    return result
 
 
-def format_record(info, patient_name, session_num):
-
+def save_record(info: str, patient_name: str, session_num: str) -> str:
     date = datetime.datetime.now().date()
+
     record = f"""
 Patient name: {patient_name}
-Date:  {date}
+Date: {date}
 
 {info}
-
 """
+
     folder = "Records"
     os.makedirs(folder, exist_ok=True)
 
     filename = f"session{session_num}_record.txt"
     filepath = os.path.join(folder, filename)
 
-    with open(filepath, "w") as file:
-        file.write(record)
+    with open(filepath, "w") as f:
+        f.write(record)
 
     return record

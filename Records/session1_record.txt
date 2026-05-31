@@ -1,0 +1,16 @@
+
+Patient name: test
+Date: 2026-05-31
+
+Symptoms:
+    - Chronic lower back pain
+    - Poor sleep
+
+Treatment Plan:
+    Weekly visits for six weeks
+    Needle points treatment
+
+Needling points:
+    BL23
+    BL25
+    GB30
