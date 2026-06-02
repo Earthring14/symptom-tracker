@@ -3,5 +3,5 @@ uvicorn
 jinja2
 python-multipart
 openai
-langchain-ollama
+langchain_openai
 langchain-core

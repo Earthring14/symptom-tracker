@@ -1,6 +1,6 @@
 import os
 import datetime
-from langchain_ollama import OllamaLLM
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from openai import OpenAI
 
@@ -28,11 +28,15 @@ Your answer:
 
 """
 
-llama_model = OllamaLLM(model="llama3.2")
+#llama_model = OllamaLLM(model="llama3.2")
+llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 prompt = ChatPromptTemplate.from_template(template)
-chain = prompt | llama_model
 
+chain = prompt | llm
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -46,8 +50,13 @@ def transcribe_audio(file_path: str) -> str:
 
 
 def extract_fields(transcript: str) -> str:
-    result = chain.invoke({"transcript": transcript})
-    return result
+
+    filled_prompt = template.format(transcript=transcript)
+    result = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": filled_prompt}]
+    )
+    return result.choices[0].message.content
 
 
 def save_record(info: str, patient_name: str, session_num: str) -> str:
