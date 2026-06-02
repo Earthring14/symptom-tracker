@@ -3,6 +3,7 @@ import datetime
 from faster_whisper import WhisperModel
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
+from openai import OpenAI
 
 template = """
 
@@ -28,17 +29,21 @@ Your answer:
 
 """
 
-whisper_model = WhisperModel("base.en", compute_type="float32")
 llama_model = OllamaLLM(model="llama3.2")
 
 prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | llama_model
 
 
-def transcribe_audio(path: str) -> str:
-    segments, info = whisper_model.transcribe(path)
-    transcript = "".join([seg.text for seg in segments])
-    return transcript
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def transcribe_audio(file_path: str) -> str:
+    with open(file_path, "rb") as f:
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=f
+        )
+    return transcript.text
 
 
 def extract_fields(transcript: str) -> str:

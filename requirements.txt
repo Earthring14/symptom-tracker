@@ -2,6 +2,6 @@ fastapi
 uvicorn
 jinja2
 python-multipart
-faster-whisper
+openai
 langchain-ollama
 langchain-core
