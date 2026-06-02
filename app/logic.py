@@ -1,6 +1,5 @@
 import os
 import datetime
-from faster_whisper import WhisperModel
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 from openai import OpenAI
