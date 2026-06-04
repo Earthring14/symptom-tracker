@@ -219,3 +219,5 @@ __marimo__/
 .vercel
 .env*
 .DS_Store
+Records/*.txt
+Uploads/*.m4a

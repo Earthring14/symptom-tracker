@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 4. Run the application 
 uvicorn api.index:app --reload
-OPENAI_API_KEY="your_key_here" uvicorn api.index:app --reload
+OPENAI_API_KEY="your_key_here" GROQ_API_KEY="your_key_here" uvicorn api.index:app --reload
 
 5. Navigate to the following url
 http://127.0.0.1:8000
